@@ -5,7 +5,8 @@ import RNShake from 'react-native-shake';
 
 const App = () => {
   const [toogle, setToogle] = useState(false);
-  const handleChangeToogle = () => !toogle;
+
+  const handleChangeToogle = () => setToogle(oldToogle => !oldToogle);
 
   useEffect(() => {
     Torch.switchState(toogle);
@@ -13,17 +14,14 @@ const App = () => {
 
   useEffect(() => {
     const subscription = RNShake.addListener(() => {
-      handleChangeToogle();
+      setToogle(oldToogle => !oldToogle);
     });
     return () => subscription.remove();
-  });
+  }, []);
 
   return (
     <View style={toogle ? style.containerLight : style.container}>
-      <TouchableOpacity
-        onPress={() => {
-          setToogle(handleChangeToogle);
-        }}>
+      <TouchableOpacity onPress={handleChangeToogle}>
         <Image
           style={toogle ? style.lightingOn : style.lightingOff}
           source={
@@ -63,15 +61,15 @@ const style = StyleSheet.create({
   lightingOn: {
     resizeMode: 'contain',
     alignSelf: 'center',
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
   },
   lightingOff: {
     resizeMode: 'contain',
     alignSelf: 'center',
     tintColor: 'white',
-    width: 150,
-    height: 150,
+    width: 200,
+    height: 200,
   },
   dioLogo: {
     resizeMode: 'contain',
